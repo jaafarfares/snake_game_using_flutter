@@ -257,10 +257,10 @@ class _SnakeGameState extends State<SnakeGame> {
                         }
 
                         return Container(
-                          margin: EdgeInsets.all(1),
+                          margin: EdgeInsets.all(2),
                           decoration: BoxDecoration(
                             color: color,
-                            shape: BoxShape.circle,
+                            shape: BoxShape.rectangle,
                           ),
                         );
                       }),
