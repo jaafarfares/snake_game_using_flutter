@@ -16,7 +16,7 @@ The game ends when the "End" button is pressed, which cancels the timer and sets
 
 
 
-![Screenshot](snake_game1.png)
+![Screenshot](snake_game1.png) ![Screenshot](snake_game2.png)
 
 
 
