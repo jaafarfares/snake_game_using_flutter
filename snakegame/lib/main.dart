@@ -49,17 +49,16 @@ class _SnakeGameState extends State<SnakeGame> {
   final player = AudioPlayer();
   Duration? duration;
 
-  void initPlayer() async {
+/*   void initPlayer() async {
     await player.setSource(AssetSource("/sound.mp3"));
     duration = await player.getDuration();
-  }
+  } */
 
   //init the player
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    initPlayer();
   }
 
   void startGame() {
