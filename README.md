@@ -15,4 +15,12 @@ The game starts when the "Start" button is pressed, which sets the isPlaying fla
 The game ends when the "End" button is pressed, which cancels the timer and sets the isPlaying flag to false.
 
 
+
+![Screenshot](snake_game1.png)
+
+
+
+
+
+
 ## Made by [Jaafar Fares](https://github.com/jaafarfares)
