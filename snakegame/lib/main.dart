@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:async';
-import 'package:flame_audio/flame_audio.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 
 void main() => runApp(MyApp());
@@ -26,7 +23,6 @@ class SnakeGame extends StatefulWidget {
 class _SnakeGameState extends State<SnakeGame> {
   final int squaresPerRow = 20;
   final int squaresPerCol = 40;
-  // final fontStyle = TextStyle(color: Colors.white, fontSize: 20);
   final randomGen = Random();
 
   var snake = [
@@ -37,31 +33,26 @@ class _SnakeGameState extends State<SnakeGame> {
   var direction = 'up';
   var isPlaying = false;
 
-/*   void startBgmMusic() {
-    FlameAudio.bgm.initialize();
-    FlameAudio.bgm.play('assets/audio/Spazzmatica-Polka.mp3');
-  } */
-/*  String audioasset = "assets/audio/Spazzmatica-Polka.mp3";
- ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
- Uint8List audiobytes = bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes); */
   bool isPlayingg = false;
-  double value = 0;
-  final player = AudioPlayer();
-  Duration? duration;
+  bool musicisPlayingg = false;
 
-/*   void initPlayer() async {
-    await player.setSource(AssetSource("/sound.mp3"));
-    duration = await player.getDuration();
-  } */
+  double value = 0;
+  Duration? duration;
 
   //init the player
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
+  AudioPlayer player = AudioPlayer();
   void startGame() {
+
+    // start the BG music
+    player.play(UrlSource(
+        'https://file-examples.com/storage/fe59cbbb63645c19f9c3014/2017/11/file_example_MP3_700KB.mp3'));
+    
+    //player.setSourceAsset('assets/audio/gamemusic-6082.mp3');
     const duration = Duration(milliseconds: 300);
 
     snake = [
@@ -134,6 +125,9 @@ class _SnakeGameState extends State<SnakeGame> {
   }
 
   void endGame() {
+    // stop the BG music
+    player.pause();
+
     isPlaying = false;
 
     showDialog(
@@ -194,8 +188,6 @@ class _SnakeGameState extends State<SnakeGame> {
                             isPlaying = false;
                           } else {
                             startGame();
-                            //player.setSource();
-                            //player.play('assets/audio/Spazzmatica-Polka.mp3');
                           }
                         }),
                     Text(
