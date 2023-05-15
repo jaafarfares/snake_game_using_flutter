@@ -1,7 +1,10 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() => runApp(MyApp());
 
@@ -47,12 +50,13 @@ class _SnakeGameState extends State<SnakeGame> {
 
   AudioPlayer player = AudioPlayer();
   void startGame() {
+    // start the BG music using URL
 
-    // start the BG music
-    player.play(UrlSource(
-        'https://file-examples.com/storage/fe59cbbb63645c19f9c3014/2017/11/file_example_MP3_700KB.mp3'));
-    
-    //player.setSourceAsset('assets/audio/gamemusic-6082.mp3');
+    /* player.play(UrlSource(
+        'https://file-examples.com/storage/fe59cbbb63645c19f9c3014/2017/11/file_example_MP3_700KB.mp3')); */
+
+    player.play(AssetSource('audio/sound.mp3'));
+
     const duration = Duration(milliseconds: 300);
 
     snake = [
@@ -102,8 +106,13 @@ class _SnakeGameState extends State<SnakeGame> {
     });
   }
 
-  void createFood() {
+  void createFood() async {
     food = [randomGen.nextInt(squaresPerRow), randomGen.nextInt(squaresPerCol)];
+
+    AudioPlayer player2 = AudioPlayer();
+    if (snake.length > 2) {
+      await player2.play(AssetSource('audio/success.mp3'));
+    }
   }
 
   bool checkGameOver() {
@@ -131,39 +140,44 @@ class _SnakeGameState extends State<SnakeGame> {
     isPlaying = false;
 
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(32.0))),
-            contentPadding: EdgeInsets.all(10.0),
-            alignment: Alignment.center,
-            title: const Text(
-              'Game Over',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.red, fontSize: 22),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32.0)),
+          ),
+          contentPadding: EdgeInsets.all(10.0),
+          alignment: Alignment.center,
+          title: const Text(
+            'Game Over',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+              fontSize: 22,
             ),
-            content: Text(
-              'Score: ${snake.length - 2}',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          content: Text(
+            'Score: ${snake.length - 2}',
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Close', style: TextStyle(fontSize: 16)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close', style: TextStyle(fontSize: 16)),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  Widget build(BuildContext context) {
+  Widget build(BuildContext mainContext) {
     return Scaffold(
       backgroundColor: Colors.deepPurple[200],
       body: SafeArea(
@@ -178,7 +192,7 @@ class _SnakeGameState extends State<SnakeGame> {
                     TextButton(
                         style: TextButton.styleFrom(
                             backgroundColor:
-                                isPlaying ? Colors.red : Colors.deepPurple),
+                                isPlaying ? Colors.red : Colors.green),
                         child: Text(
                           isPlaying ? 'End' : 'Start',
                           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -190,6 +204,14 @@ class _SnakeGameState extends State<SnakeGame> {
                             startGame();
                           }
                         }),
+                    ElevatedButton(
+                      child: Text(
+                        "Pick Color",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () => builcolorpicker(),
+                      style: ElevatedButton.styleFrom(primary: Colors.blue),
+                    ),
                     Text(
                       'Score: ${snake.length - 2}',
                       style: TextStyle(
@@ -224,7 +246,7 @@ class _SnakeGameState extends State<SnakeGame> {
                         crossAxisCount: squaresPerRow,
                       ),
                       itemCount: squaresPerRow * squaresPerCol,
-                      itemBuilder: (BuildContext context, int index) {
+                      itemBuilder: (BuildContext gridContext, int index) {
                         var color;
                         var x = index % squaresPerRow;
                         var y = (index / squaresPerRow).floor();
@@ -263,4 +285,33 @@ class _SnakeGameState extends State<SnakeGame> {
       ),
     );
   }
+
+  // create some values
+  Color pickerColor = Color(0xff443a49);
+
+  Widget builcolorpicker() => ColorPicker(
+      pickerColor: pickerColor,
+      onColorChanged: (pickerColor) => setState(() {
+            this.pickerColor = pickerColor;
+          }));
+
+  void pickcolor(BuildContext mainContext) => showDialog(
+        context: mainContext,
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            title: Text('hello'),
+            content: Column(
+              children: [
+                builcolorpicker(),
+                TextButton(
+                  child: Text('select'),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
 }
