@@ -47,12 +47,14 @@ class _SnakeGameState extends State<SnakeGame> {
 
   AudioPlayer player = AudioPlayer();
   void startGame() {
+    // start the BG music using url 
+    /*  player.play(UrlSource(
+        'https://file-examples.com/storage/fe59cbbb63645c19f9c3014/2017/11/file_example_MP3_700KB.mp3')); */
 
-    // start the BG music
-    player.play(UrlSource(
-        'https://file-examples.com/storage/fe59cbbb63645c19f9c3014/2017/11/file_example_MP3_700KB.mp3'));
+    // start the BG music using local assest 
+    player.play(AssetSource('audio/gamemusic-6082.mp3'));
     
-    //player.setSourceAsset('assets/audio/gamemusic-6082.mp3');
+    
     const duration = Duration(milliseconds: 300);
 
     snake = [
@@ -103,6 +105,11 @@ class _SnakeGameState extends State<SnakeGame> {
   }
 
   void createFood() {
+    if (snake.length > 2) {
+      AudioPlayer player2 = AudioPlayer();
+      player2.play(AssetSource('audio/success.mp3'));
+    }
+
     food = [randomGen.nextInt(squaresPerRow), randomGen.nextInt(squaresPerCol)];
   }
 
